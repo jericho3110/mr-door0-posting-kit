@@ -1,0 +1,121 @@
+MR-DOOR0 POSTING KIT - SIMPLE STEPS
+====================================
+
+PART 1: PUT THE KIT ON GITHUB
+
+1. Open a terminal and go to the kit:
+
+cd /home/heavenlydemon/Documents/vscode_proj/testing_chamber/Reddit_mod_app_bot/mr-door0-posting-kit
+
+2. Check the files:
+
+ls
+
+You should see README.md, integration-snippets.md, src, and QUICK_START.txt.
+
+3. Create a new EMPTY GitHub repository named:
+
+mr-door0-posting-kit
+
+Do not add a GitHub README, .gitignore, or license because the local kit already has files.
+
+4. Connect this local kit to GitHub. Replace YOUR_USERNAME:
+
+git remote add origin https://github.com/YOUR_USERNAME/mr-door0-posting-kit.git
+
+5. Save and upload the kit:
+
+git add .
+git commit -m "Add reusable Reddit posting feature kit"
+git push -u origin main
+
+Your reusable feature is now stored on GitHub.
+
+PART 2: ADD THE KIT TO ANOTHER DEVVIT BOT
+
+1. Make a backup or branch in the OTHER bot:
+
+cd /path/to/the/other-bot
+git checkout -b add-posting-feature
+
+2. Import only the kit source directory:
+
+mkdir -p src/features/posting
+git subtree add --prefix=src/features/posting \
+  https://github.com/YOUR_USERNAME/mr-door0-posting-kit.git main --squash
+
+If the other bot is not already a Git repository, use this instead:
+
+cp -r /path/to/mr-door0-posting-kit/src/* src/features/posting/
+
+3. Open integration-snippets.md from the kit:
+
+/path/to/mr-door0-posting-kit/integration-snippets.md
+
+4. Manually merge its snippets into the OTHER bot's existing files:
+
+- Add the Post now menu item to the existing devvit.json menu.items array.
+- Add postNow to the existing devvit.json forms object.
+- Add the weekly task to the existing devvit.json scheduler.tasks object.
+- Add the route code to the existing menu route file.
+- Add the form route code to the existing forms route file.
+- Add the scheduler route code to the existing scheduler route file.
+
+Do not replace devvit.json, src/index.ts, or whole route files.
+Do not remove the other bot's networking or existing settings.
+
+5. Check the other bot's feature import paths. The source files must stay together:
+
+src/features/posting/posting.ts
+src/features/posting/form.ts
+src/features/posting/scheduler.ts
+
+6. Install dependencies and test the OTHER bot:
+
+npm install
+npm run test
+
+7. Test it on a development subreddit:
+
+npm run dev
+
+Then open the subreddit moderator menu, select Post now, enter a title/body,
+and click Publish post.
+
+8. Upload the OTHER bot only after testing:
+
+npm run deploy
+
+9. Install/update the OTHER bot on its target subreddit using its own app name:
+
+npm exec devvit -- install TARGET_SUBREDDIT OTHER_BOT_APP_NAME
+
+DATA SAFETY
+==========
+
+The kit does not copy, delete, or overwrite the other bot's Redis data.
+Keep the Redis prefix in src/features/posting/scheduler.ts unique:
+
+postingFeature
+
+If the other bot already uses that prefix, change REDIS_PREFIX before deployment.
+Do not copy the old bot's Redis values into the new bot.
+Existing Reddit posts are not moved or deleted.
+
+UPDATING THE KIT LATER
+======================
+
+In the OTHER bot, pull a later kit update only into the subtree directory:
+
+git subtree pull --prefix=src/features/posting \
+  https://github.com/YOUR_USERNAME/mr-door0-posting-kit.git main --squash
+
+Review the diff before committing. The host bot's devvit.json and route files still
+require manual review because they are integration points.
+
+IMPORTANT
+=========
+
+A plain git pull is not enough to integrate a feature into a different app.
+The source files can be pulled safely, but manifest and route changes must be merged
+carefully so the other bot's networking and settings are not overwritten.
