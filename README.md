@@ -1,3 +1,11 @@
+# ALWAYS REMEMBER 
+
+npm exec -- devvit logout
+npm exec -- devvit login
+
+logout from your existing previous connected reddit account and login the new account
+then attempt to create the new workspace in a different directory
+
 # mr-door0 Posting Feature Kit
 
 This directory contains only the reusable Reddit posting feature from `mr-door0`.
