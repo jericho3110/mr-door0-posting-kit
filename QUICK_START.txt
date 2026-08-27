@@ -56,10 +56,8 @@ cp -r /path/to/mr-door0-posting-kit/src/* src/features/posting/
 
 - Add the Post now menu item to the existing devvit.json menu.items array.
 - Add postNow to the existing devvit.json forms object.
-- Add the weekly task to the existing devvit.json scheduler.tasks object.
 - Add the route code to the existing menu route file.
 - Add the form route code to the existing forms route file.
-- Add the scheduler route code to the existing scheduler route file.
 
 Do not replace devvit.json, src/index.ts, or whole route files.
 Do not remove the other bot's networking or existing settings.
@@ -68,7 +66,6 @@ Do not remove the other bot's networking or existing settings.
 
 src/features/posting/posting.ts
 src/features/posting/form.ts
-src/features/posting/scheduler.ts
 
 6. Install dependencies and test the OTHER bot:
 
@@ -94,11 +91,7 @@ DATA SAFETY
 ==========
 
 The kit does not copy, delete, or overwrite the other bot's Redis data.
-Keep the Redis prefix in src/features/posting/scheduler.ts unique:
-
-postingFeature
-
-If the other bot already uses that prefix, change REDIS_PREFIX before deployment.
+This manual-only kit does not require Redis.
 Do not copy the old bot's Redis values into the new bot.
 Existing Reddit posts are not moved or deleted.
 

@@ -23,15 +23,6 @@ Add one form inside the existing `forms` object:
 "postNow": "/internal/form/post-now-submit"
 ```
 
-Add the scheduler task inside the existing `scheduler.tasks` object:
-
-```json
-"postingFeatureWeekly": {
-  "endpoint": "/internal/scheduler/posting-feature-weekly",
-  "cron": "0 0 * * 1"
-}
-```
-
 Add optional defaults inside the host bot's existing `settings.subreddit` object:
 
 ```json
@@ -47,12 +38,11 @@ Add optional defaults inside the host bot's existing `settings.subreddit` object
 }
 ```
 
-Ensure the host bot already has these permissions, or add them without removing other
-permissions:
+Ensure the host bot already has Reddit moderator API permission, or add it without
+removing other permissions:
 
 ```json
 "permissions": {
-  "redis": true,
   "reddit": { "enable": true, "scope": "moderator" }
 }
 ```
@@ -109,26 +99,6 @@ forms.post("/post-now-submit", async (c) => {
 Remove `PostInput` from the import if the host TypeScript compiler reports it as
 unused; the route does not require that type.
 
-## Existing scheduler route file
-
-Add an import:
-
-```ts
-import { runWeeklyPostingTask } from "../features/posting/scheduler.js";
-```
-
-Add this endpoint:
-
-```ts
-schedulerRoutes.post("/posting-feature-weekly", async (c) => {
-  await runWeeklyPostingTask();
-  return c.json<TaskResponse>({}, 200);
-});
-```
-
-Use the host bot's existing error-handling convention if it wraps scheduler routes.
-Do not add a second server or call `serve()` from the feature kit.
-
 ## Verification
 
 From the host bot directory:
@@ -140,7 +110,7 @@ npm run dev
 ```
 
 Use the subreddit moderator menu and choose **Post now**. Confirm the post is made
-in the current subreddit. Test the scheduler separately after the declared cron time.
+in the current subreddit.
 
 Then upload the host bot using its own app name and deployment process:
 

@@ -14,15 +14,12 @@ manifest entries described below. Do not replace the other bot's `index.ts`,
 - Moderator-only **Post now** menu form.
 - Editable title and body fields.
 - Text post submission to the subreddit where the app is installed.
-- Weekly scheduled post handler.
-- Redis lock and ISO-week marker to avoid duplicate scheduled posts.
 - Submission logging and user-facing failure messages.
 
 ## Files
 
 - `src/posting.ts`: shared permission check and `reddit.submitPost` call.
 - `src/form.ts`: native Devvit form definition.
-- `src/scheduler.ts`: weekly posting and Redis deduplication.
 - `integration-snippets.md`: route and manifest additions that must be merged manually.
 
 ## Important: this does not overwrite existing bot data
@@ -31,18 +28,14 @@ The kit does not include Redis export/import code and never deletes or copies ex
 Redis data. A Devvit app's data belongs to its app installation. A newly created app
 identity starts with separate data from the old app.
 
-The scheduler keys use the `postingFeature:` prefix and subreddit ID. If you install
-this feature into an existing bot, confirm that prefix is not already used by that bot.
-If it is used, change `REDIS_PREFIX` in `src/scheduler.ts` before deploying.
-
 Do not blindly copy `devvit.json`, `src/index.ts`, or whole route files from this kit.
 Those files belong to the host bot and are exactly where networking conflicts happen.
 
 ## Add it to another Devvit bot
 
 1. Create a branch or backup in the host bot.
-2. Copy `src/posting.ts`, `src/form.ts`, and `src/scheduler.ts` into a feature folder.
-3. Follow `integration-snippets.md` to add unique routes, menu/form names, and one scheduler task.
+2. Copy `src/posting.ts` and `src/form.ts` into a feature folder.
+3. Follow `integration-snippets.md` to add unique routes and menu/form names.
 4. Merge the snippets into the host bot's existing files instead of replacing them.
 5. Keep the host bot's existing server bootstrap and other routes intact.
 6. Run the host bot's own test/build commands.
